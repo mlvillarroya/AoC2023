@@ -21,9 +21,9 @@ def goThroughMap(number, maps):
                 break
     return number
 
-def execute():
-    seeds, maps = loadData()
-    for i in range(len(seeds)//2):
-        for j in range(seeds[i+1]):
-    #     newseeds += [seeds[i*2] + increment for increment in range(seeds[i*2+1])]
-    # print(min([goThroughMap(seed,maps) for seed in newseeds]))
+# def execute():
+#     seeds, maps = loadData()
+#     for i in range(len(seeds)//2):
+#         for j in range(seeds[i+1]):
+#     #     newseeds += [seeds[i*2] + increment for increment in range(seeds[i*2+1])]
+#     # print(min([goThroughMap(seed,maps) for seed in newseeds]))
