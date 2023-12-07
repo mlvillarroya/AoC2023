@@ -8,6 +8,7 @@ def loadData():
     return instructions
 
 CARDS = {'A':13, 'K':12, 'Q':11, 'J':10, 'T':9, '9': 8, '8':7, '7':6, '6':5, '5':4, '4':3, '3':2, '2':1}
+DIFFERENT_PLAYS = 7
 
 class Play(Enum):
     FIVE_OF_A_KIND = 7
@@ -31,17 +32,25 @@ def playAnalyze(play):
     elif 2 in charsInPlay.values(): return Play.ONE_PAIR
     else: return Play.HIGH_CARD
 
-# def sortByValue(originList):
-    
-#      for value in originList:
-
 def cardValue(card):
     return ([CARDS[letter] for letter in card])
 
+def getSortedValuesIndex(cardValueList):
+    if not cardValueList: return
+    cardValueList = [[i] + cardValueList[i] for i in range(len(cardValueList))]
+    cardValueNp = np.array(cardValueList)
+    cardValueNp = cardValueNp[np.lexsort((cardValueNp[:,5],cardValueNp[:,4],cardValueNp[:,3],cardValueNp[:,2],cardValueNp[:,1]))] 
+    return [value[0] for value in cardValueNp]
+
 def execute():
     instructions = loadData()
-    for instruction in instructions:
-        print(cardValue(instruction.split(" ")[0]))
-    # sortedList = []
-    # a = [instruction.split(" ")[0] for instruction in instructions if playAnalyze(instruction.split(" ")[0]).value == 1]
-    
+    listByPlayValue = np.array([])
+    for i in range(1,DIFFERENT_PLAYS+1):
+        samePointsList = [instruction for instruction in instructions if playAnalyze(instruction.split(" ")[0]).value == i]
+        cardValueList = [cardValue(play.split(" ")[0]) for play in samePointsList]
+        if getSortedValuesIndex(cardValueList): 
+            listByPlayValue = np.append(listByPlayValue,np.array(samePointsList)[getSortedValuesIndex(cardValueList)])
+    total = 0
+    for i in range(len(listByPlayValue)):
+        total += int(listByPlayValue[i].split(" ")[1]) * (1+i)
+    print(total)
