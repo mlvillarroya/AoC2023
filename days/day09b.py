@@ -11,8 +11,8 @@ def computeNextNumber(history):
         newMember = [historyEvolution[-1][i+1] - historyEvolution[-1][i] for i in range(len(historyEvolution[-1])-1)]
         historyEvolution.append(newMember)
     for i in range(len(historyEvolution)-1):
-        historyEvolution[-2-i].append(historyEvolution[-1-i][-1] + historyEvolution[-2-i][-1])
-    return historyEvolution[0][-1]
+        historyEvolution[-2-i].insert(0,historyEvolution[-2-i][0]-historyEvolution[-1-i][0])
+    return historyEvolution[0][0]
 
 def execute():
     histories = loadData()
