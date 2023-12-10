@@ -19,6 +19,9 @@ def lookForBeginning(matrix):
             if matrix[i][j] == 'S': return i,j
     return None
 
+def oppositeDirection(direction):
+    return (direction + 2) % 4
+
 def substituteSBySymbol(matrix,initialRow,initialColumn):
     coordinates = [0,0,0,0]
     if initialRow > 0 and SYMBOLS[matrix[initialRow - 1][initialColumn]][2]==1 : coordinates[0] = 1
@@ -29,13 +32,29 @@ def substituteSBySymbol(matrix,initialRow,initialColumn):
     if symbol: return symbol
     else: raise ValueError('matrix is not correct, can\'t find symbol')
 
-# def nextNode(matrix, initialRow, initialColumn):
-
+def nextNode(matrix, initialRow, initialColumn, directionComeFrom, symbol = None):
+    if not symbol: symbol = matrix[initialRow][initialColumn] 
+    possibleDirections = SYMBOLS[symbol].copy()
+    possibleDirections[oppositeDirection(directionComeFrom)] = 0
+    nextDirection = [i for i in range(len(possibleDirections)) if possibleDirections[i] == 1][0]
+    if nextDirection == 0: initialRow -= 1
+    elif nextDirection == 1: initialColumn += 1
+    elif nextDirection == 2: initialRow += 1
+    else: initialColumn -= 1
+    return initialRow,initialColumn,nextDirection
 
 def execute():
     instructions = loadData()
     initialRow, initialColumn = lookForBeginning(instructions)
     startSymbol = substituteSBySymbol(instructions,initialRow, initialColumn)
     steps = 0
-    
-    pass
+    startDirection = [i for i in range(len(SYMBOLS[startSymbol])) if SYMBOLS[startSymbol][i] == 1][0]
+    nextSymbol = ""
+    i, j, nextDirection = nextNode(instructions,initialRow,initialColumn,startDirection, symbol=startSymbol)
+    while True:
+        nextSymbol = instructions[i][j]
+        steps += 1
+        if nextSymbol == 'S': break
+        i, j, nextDirection = nextNode(instructions,i,j,nextDirection)
+    print(steps//2)
+
