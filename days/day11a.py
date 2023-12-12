@@ -30,9 +30,24 @@ def universeExpansion(universe):
             insertNewColumn(universe, columnIndex+extra)
             extra += 1
 
+def getGalaxyCoordinates(universe):
+    map = []
+    for i in range(len(universe)):
+        for j in range(len(universe[i])):
+            if universe[i][j] == '#':
+                map.append([i,j])
+    return map
+
+def distanceBetweenGalaxies(galaxy1, galaxy2):
+    return abs(galaxy1[0]-galaxy2[0])+abs(galaxy1[1]-galaxy2[1])
+
 def execute():
     universe = loadData()
     universeExpansion(universe)
-    pass
+    galaxyMap = getGalaxyCoordinates(universe)
+    lenghtSum = 0
+    for i in range(len(galaxyMap)):
+        lenghtSum += sum(distanceBetweenGalaxies(galaxyMap[i],galaxyMap[j]) for j in range(len(galaxyMap)) if i != j)
+    print(lenghtSum//2)
 
 
